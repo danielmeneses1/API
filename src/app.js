@@ -20,9 +20,14 @@ app.get("/livros",async (req, res) => {
     res.status(200).json(ListaLivros);
 });
 
-app.post("/livros", (req, res) => {
-    livros.push(req.body);
-    res.status(201).json(req.body);
+app.post("/livros", async (req, res) => {
+    const livro = new Livro(req.body);
+    try {
+        const novoLivro = await livro.save();
+        res.status(201).json(novoLivro);
+    } catch (err) {
+        res.status(400).json({ mensagem: err.message });
+    }
 })
 
 app.get("/livros/:id", (req, res) => {
