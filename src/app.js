@@ -1,5 +1,6 @@
 import express from "express";
 import  conectNaDatabase from "./config/dbConect.js";
+import Livro from "./models/Livro.js";
 
 const conexao = await conectNaDatabase();
 
@@ -14,23 +15,9 @@ conexao.once("open", () => {
 const app = express();
 app.use(express.json());
 
-const livros = [
-    {
-        id: 1,
-        titulo: "O Senhor dos Anéis",
-    },
-    {
-        id: 2,
-        titulo: "O hobbit",
-    }
-]
-
-app.get("/", (req, res) => {
-    res.status(200).send("Curso de Node.js");
-})
-
-app.get("/livros", (req, res) => {
-    res.status(200).json(livros);
+app.get("/livros",async (req, res) => {
+    const ListaLivros = await Livro.find({});
+    res.status(200).json(ListaLivros);
 });
 
 app.post("/livros", (req, res) => {
@@ -73,4 +60,3 @@ app.delete("/livros/:id", (req, res) => {
 
 export default app;
 
-//mongodb+srv://danieljijoca:<password>@cluster0.1o7sv1d.mongodb.net/?retryWrites=true&w=majority
